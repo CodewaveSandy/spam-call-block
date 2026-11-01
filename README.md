@@ -1,33 +1,39 @@
-# Spam Call Block
+# Spam Call Block — Phase 1
 
-Minimal native Kotlin Android scaffold to test GitHub Actions → APK download → phone installation. Android 10 or newer is required.
+Native Kotlin app for Android 10+. The fixed rule rejects **all Indian mobile numbers starting with +918697**, including equivalent 10-digit, 91, 0091, and domestic 0-prefixed formats. Other prefixes and foreign country codes are allowed. Custom rules come later.
 
-The app shows a welcome screen and a button that displays a confirmation message. **It does not screen or block calls yet**, and requests no permissions.
+## Build and install
 
-## Build on GitHub without Android Studio
-
-1. Create a GitHub repository and push this entire project, including `.github/` and `gradle/`.
-2. Open the repository's **Actions** tab and select **Build Android APK**.
-3. The workflow runs on pushes and pull requests. You can also select **Run workflow** on the default branch.
-4. Open a successful run. Under **Artifacts**, download **spam-call-block-debug** while signed into GitHub.
-5. Extract the downloaded ZIP to get `app-debug.apk`.
-6. Transfer the APK to your Android phone, open it, and allow installation from that source if Android asks.
-7. Launch **Spam Call Block**, then tap **Test the app**.
-
-No Android Studio installation, signing secrets, or Play Store account is needed for this debug build. The workflow installs its SDK and uses Java 17, Gradle 8.11.1, Android Gradle Plugin 8.9.2, and Android SDK 35. GitHub Actions usage is subject to your account's plan and quotas.
-
-The APK is for testing. Fresh CI machines may generate different debug signing keys; if an update fails with a signature mismatch, uninstall the previous test app first. A stable signing key can be configured when persistent test installs are needed.
-
-## Optional local build
-
-With JDK 17 and Android SDK 35 installed, set `ANDROID_HOME` to your SDK directory (or set `sdk.dir` in an untracked `local.properties`), then run:
+1. Push this project to GitHub, including `.github/` and `gradle/`.
+2. Open **Actions → Build Android APK**. Pushes and pull requests trigger builds; manual **Run workflow** is also available.
+3. Download **spam-call-block-debug** from a successful run's Artifacts and extract `app-debug.apk`.
+4. Install on your connected, USB-debugging-authorized phone:
 
 ```sh
-./gradlew :app:assembleDebug :app:lintDebug
+/Users/codewavesandy/Desktop/learning/platform-tools/adb install -r /Users/codewavesandy/Desktop/learning/app-debug.apk
 ```
 
-Output: `app/build/outputs/apk/debug/app-debug.apk`.
+A fresh CI machine may use a different debug signing key. If installation reports `INSTALL_FAILED_UPDATE_INCOMPATIBLE`, uninstall the previous test app from the phone and install again. This clears its permissions; repeat setup below.
 
-## Next step
+## Enable and test
 
-Add local prefix rules and a `CallScreeningService`, then request the Android call-screening role. This scaffold intentionally leaves those features for the next iteration.
+1. Open **Spam Call Block** and tap **Enable call screening**. Select this app for caller ID / spam / call screening when Android asks. This can replace another screening app such as Truecaller.
+2. Tap **Allow Contacts for saved callers** and grant permission, especially if the test number is saved. Android otherwise omits contact calls from screening. The app does not query or upload contacts; it requests the permission to receive those screening callbacks.
+3. Confirm the screen says **Ready**. If permission was denied repeatedly, use **App permissions** to grant it in Settings.
+4. Lock the phone and call from the other SIM beginning `8697`. The call should be rejected before ringing, with missed-call notifications suppressed. Confirm no ring, vibration, or screen wake on your actual device. A blocked entry can remain in the system call history.
+5. Call from a different prefix and confirm it rings normally. Also test after closing the app and after rebooting.
+6. To stop blocking, use **Default apps / disable screening** and change the caller ID / spam app selection.
+
+Only ordinary incoming phone calls supplied by Android Telecom are screened. WhatsApp calls, hidden/unavailable numbers not supplied by Android, and carrier-generated alerts are outside this rule. The app starts no call UI, notification, background polling, or network requests.
+
+## Development and validation
+
+GitHub Actions uses Java 17, Gradle 8.11.1, AGP 8.9.2, and SDK 35. It runs prefix unit tests, builds the APK, and runs Android lint. Build artifacts expire after seven days.
+
+With JDK 17 and SDK 35 installed locally:
+
+```sh
+./gradlew :app:testDebugUnitTest :app:assembleDebug :app:lintDebug
+```
+
+The matching logic has been compiled and checked locally against 18 cases using a cached Kotlin compiler. Full Android build/lint and JUnit execution run in GitHub Actions because the local machine has no Android SDK. Real-device call screening still requires the test procedure above.

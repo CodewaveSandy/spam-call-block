@@ -1,9 +1,16 @@
 <resources>
     <string name="app_name">Spam Call Block</string>
     <string name="heading">Spam Call Block</string>
-    <string name="build_success">Your GitHub Actions APK is running.</string>
-    <string name="version">Scaffold version %1$s</string>
-    <string name="scope">This build tests APK installation only. Call screening and blocking rules will be added next.</string>
-    <string name="test_button">Test the app</string>
-    <string name="test_success">Everything is working!</string>
+    <string name="rule_description">Phase 1: silently reject Indian numbers starting with +918697.</string>
+    <string name="checking">Checking setup…</string>
+    <string name="setup_description">1. Select this app for call screening / caller ID and spam.\n2. Allow Contacts so Android also sends saved-contact calls for screening. The app does not read or upload your contacts.</string>
+    <string name="enable_screening">Enable call screening</string>
+    <string name="allow_contacts">Allow Contacts for saved callers</string>
+    <string name="app_settings">App permissions</string>
+    <string name="default_apps">Default apps / disable screening</string>
+    <string name="screening_unavailable">Call screening is unavailable on this device.</string>
+    <string name="screening_disabled">Blocking is inactive. Enable call screening below.</string>
+    <string name="screening_partial">Screening is active for unsaved callers. Allow Contacts to include your saved test number.</string>
+    <string name="screening_ready">Ready: +918697… calls will be rejected, including saved contacts.</string>
+    <string name="testing_description">Lock your phone and call it from your test number. Matching calls are rejected with missed-call notifications suppressed; a blocked entry may remain in call history. Other numbers are allowed normally.\n\nThis rule blocks every Indian number beginning 8697. To stop blocking, change the caller ID / spam app in Default apps.\n\nIf Contacts was denied repeatedly, enable it under App permissions. WhatsApp calls are not screened.</string>
 </resources>

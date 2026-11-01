@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Spam Call Block</string>
+    <string name="heading">Spam Call Block</string>
+    <string name="build_success">Your GitHub Actions APK is running.</string>
+    <string name="version">Scaffold version %1$s</string>
+    <string name="scope">This build tests APK installation only. Call screening and blocking rules will be added next.</string>
+    <string name="test_button">Test the app</string>
+    <string name="test_success">Everything is working!</string>
+</resources>

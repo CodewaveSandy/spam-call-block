@@ -7,7 +7,9 @@ class PrefixCallScreeningService : CallScreeningService() {
     override fun onScreenCall(callDetails: Call.Details) {
         if (callDetails.callDirection != Call.Details.DIRECTION_INCOMING) return
         val handle = callDetails.handle
-        val block = handle?.scheme == "tel" && FixedPrefixRule.matches(handle.schemeSpecificPart)
+        val store = RuleStore(this)
+        val block = handle?.scheme == "tel" && RuleEngine.shouldBlock(
+            handle.schemeSpecificPart, store.enabled, store.rules())
         // Respond immediately on-device, before Android starts ringing.
         respondToCall(callDetails, CallResponse.Builder()
             .setDisallowCall(block)
